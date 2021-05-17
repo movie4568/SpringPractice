@@ -26,7 +26,7 @@
 	
 	<aop:aspectj-autoproxy/>
 
-	<!-- 파일업로드 처리 -->
+	<!-- 파일업로드 처리 p1007 참고 -->
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<beans:property name="maxUploadSize" value="200000000"/>
 		<beans:property name="maxInMemorySize" value="200000000"/>
@@ -53,18 +53,12 @@
 			</beans:props>
 		</beans:property>
 	</beans:bean>
+
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<!-- Example: a logical view name of 'showMessage' is mapped to '/WEB-INF/jsp/showMessage.jsp' -->
 		<beans:property name="prefix" value="/WEB-INF/view/" />
-		<beans:property name="suffix" value=".jsp" />
-	</beans:bean>
-	
-
-	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
-	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
