@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+<!-- task,aop 추가/ -->
+
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<task:scheduler id="jobScheduler" pool-size="10" />
+
+	<task:annotation-driven scheduler="jobScheduler" />
+	<mvc:annotation-driven />
+	
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	
+	<aop:aspectj-autoproxy/>
+
+	<!-- 파일업로드 처리 p1007 참고 -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="200000000"/>
+		<beans:property name="maxInMemorySize" value="200000000"/>
+		<beans:property name="defaultEncoding" value="utf-8"/>
+	</beans:bean>
+
+	<!-- Mail Properties -->
+	<beans:bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<beans:property name="locations">
+			<beans:value>classpath:pack/mail/controller/mail.properties</beans:value>
+		</beans:property>
+	</beans:bean>
+	
+	<beans:bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="${host}" /> <!-- smtp 서버명 -->
+		<beans:property name="port" value="${port}" /> <!-- 포트 번호 -->
+		<beans:property name="username" value="${username}" /> <!-- id(일반적인 id가 아니니 확인 필요) -->
+		<beans:property name="password" value="${password}" /> <!-- 비밀번호 -->
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.starttls.enable">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- Example: a logical view name of 'showMessage' is mapped to '/WEB-INF/jsp/showMessage.jsp' -->
+		<beans:property name="prefix" value="/WEB-INF/view/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan
+			base-package="pack.mainpage.*" />
+		<context:component-scan
+			base-package="pack.guest.*" />
+		<context:component-scan
+			base-package="pack.gong.*" />
+		<context:component-scan
+			base-package="pack.mail.*" />
+		<context:component-scan
+			base-package="pack.controller" />
+		<context:component-scan
+			base-package="pack.model" />
+		<context:component-scan
+			base-package="pack.scheduler" />
+	<context:component-scan base-package="pack.rent.*"/>
+	<context:component-scan base-package="pack.aspect"/>
+	
+	
+	
+</beans:beans>
